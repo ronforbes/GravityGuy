@@ -196,6 +196,8 @@ namespace GravityGuy.Support.Game
             }
 
             this.entityShapes.Player.Fill = new ImageBrush(this.assets.CharacterSource[(int)this.gameManager.Player.Animation.Frame % 30]);
+
+            this.gameCanvas.Background = this.gameManager.RunState.Background;
         }
 
         private void CoinPropertyChange(object sender, PropertyChangedEventArgs args)

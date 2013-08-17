@@ -56,6 +56,11 @@ namespace GravityGuy.Support.Game
         public event EventHandler OnPresent;
 
         /// <summary>
+        /// Event that is fired when a coin is captured
+        /// </summary>
+        public event EventHandler<Coin> OnCoinCaptured;
+
+        /// <summary>
         /// Initializes a new GameManager instance.
         /// </summary>
         /// <param name="uiTaskScheduler">TaskScheduler associated with the UI thread.</param>
@@ -132,6 +137,12 @@ namespace GravityGuy.Support.Game
         {
             return this.ScheduleOperation(this.DoResume)
                 .ContinueWith<bool>(this.ExtractResult, TaskContinuationOptions.ExecuteSynchronously);
+        }
+
+        public Task Victory()
+        {
+            return this.ScheduleOperation(this.DoVictory)
+                .ContinueWith(this.ExtractResult, TaskContinuationOptions.ExecuteSynchronously);
         }
 
         /// <summary>
@@ -240,6 +251,7 @@ namespace GravityGuy.Support.Game
                 if (coin.Availability.CanCapture && playerRect.IntersectsWith(coin.Position.CollisionRegion))
                 {
                     pendingOperations.Add(coin.Capture());
+                    Dispatch<Coin>(OnCoinCaptured, coin);
                 }
             }
 
@@ -354,6 +366,22 @@ namespace GravityGuy.Support.Game
             if (this.RunState != GameRunState.GameOver)
             {
                 this.RunState = GameRunState.GameOver;
+
+                this.PropertyChanged(RunStateProperty);
+            }
+
+            return CachedResponse;
+        }
+
+        /// <summary>
+        /// Exclusively attempts to move the Game into the Victory state.
+        /// </summary>
+        /// <returns></returns>
+        private Task<ActorResponse> DoVictory()
+        {
+            if (this.RunState != GameRunState.Victory)
+            {
+                this.RunState = GameRunState.Victory;
 
                 this.PropertyChanged(RunStateProperty);
             }

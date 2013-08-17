@@ -28,6 +28,11 @@ namespace GravityGuy.Support.Game
         public static readonly GameRunState GameOver = new GameRunState() { Background = Brushes.Black };
 
         /// <summary>
+        /// Gets state representing a winning game.
+        /// </summary>
+        public static readonly GameRunState Victory = new GameRunState() { Background = Brushes.Green };
+
+        /// <summary>
         /// Gets the background brush associated with this run state.
         /// </summary>
         public Brush Background

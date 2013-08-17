@@ -4,6 +4,7 @@
         Title="Gravity Guy" Width="800" Height="600" KeyUp="GameCanvas_KeyUp" Loaded="GameCanvas_Loaded">
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         
@@ -11,7 +12,8 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         
-        <Canvas x:Name="GameCanvas" Grid.Column="0" Grid.Row="0" Background="CornflowerBlue" MouseUp="GameCanvas_MouseUp">
+        <TextBlock x:Name="CoinsCaptured" Grid.Column="0" Grid.Row="0" Foreground="White" Background="CornflowerBlue" FontSize="40"/>
+        <Canvas x:Name="GameCanvas" Grid.Column="0" Grid.Row="1" Background="CornflowerBlue" MouseUp="GameCanvas_MouseUp">
             
         </Canvas>
     </Grid>

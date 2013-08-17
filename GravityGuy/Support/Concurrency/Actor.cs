@@ -125,6 +125,14 @@ namespace GravityGuy.Support.Concurrency
             }
         }
 
+        protected void Dispatch<T>(EventHandler<T> handler, T args)
+        {
+            if (null != handler)
+            {
+                Task.Factory.StartNew(() => handler(this, args), CancellationToken.None);
+            }
+        }
+
         /// <summary>
         /// Notifies subscribers that a game entity property has changed. This notification
         /// occurs on the UI thread.

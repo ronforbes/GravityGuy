@@ -24,6 +24,7 @@ namespace GravityGuy
     {
         private GameManager gameManager;
         private PresentationManager presentationManager;
+        private Game game;
 
         public MainWindow()
         {
@@ -33,9 +34,10 @@ namespace GravityGuy
             
             this.presentationManager = new PresentationManager(this.GameCanvas, this.gameManager);
 
-            this.gameManager.OnPropertyChange += this.GameCanvas_PropertyChange;
             this.gameManager.OnStart += (o, e) => this.presentationManager.Reset();
             this.gameManager.OnPresent += (o, e) => this.presentationManager.Update();
+
+            this.game = new Game(gameManager, this);
         }
 
         private void GameCanvas_MouseUp(object sender, MouseButtonEventArgs e)
@@ -56,17 +58,6 @@ namespace GravityGuy
             else if (e.Key == Key.R)
             {
                 this.gameManager.Resume();
-            }
-        }
-
-        private void GameCanvas_PropertyChange(object sender, PropertyChangedEventArgs args)
-        {
-            if (this.gameManager == sender)
-            {
-                if (args.PropertyName == "RunState")
-                {
-                    this.GameCanvas.Background = this.gameManager.RunState.Background;
-                }
             }
         }
 
