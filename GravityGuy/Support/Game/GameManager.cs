@@ -268,6 +268,8 @@ namespace GravityGuy.Support.Game
                 pendingOperations.Add(this.DoGameOver());
             }
 
+            Player.AdvanceAnimation(dp.X * 10);
+
             return Task.WhenAll(pendingOperations.ToArray())
                 .ContinueWith(antecendet => BlankResponse, TaskContinuationOptions.ExecuteSynchronously);
         }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -37,11 +38,32 @@ namespace GravityGuy.Support.Game
             {
                 return;
             }
-
+            
             this.assets = new Assets();
             this.assets.PlatformBottomSource = new BitmapImage(new Uri("Sprites\\Platform-Bottom.png", UriKind.Relative));
             this.assets.PlatformTopSource = new BitmapImage(new Uri("Sprites\\Platform-Top.png", UriKind.Relative));
             this.assets.PlatformInnerSource = new BitmapImage(new Uri("Sprites\\Platform-Inner.png", UriKind.Relative));
+            this.assets.CharacterSource = new BitmapSource[30];
+
+            int spriteWidth = 42;
+            int spriteHeight = 51;
+            
+            System.Drawing.Rectangle croppedSource = new System.Drawing.Rectangle(0, 0, spriteWidth, spriteHeight);
+            Bitmap source = System.Drawing.Image.FromFile("Sprites\\Character.png") as Bitmap;
+
+            for (int row = 0; row < 5; row++)
+            {
+                for (int col = 0; col < 6; col++)
+                {
+                    croppedSource.X = col * spriteWidth;
+                    croppedSource.Y = row * spriteHeight;
+                    Bitmap target = new System.Drawing.Bitmap((int)croppedSource.Width, (int)croppedSource.Height);
+                    Graphics.FromImage(target).DrawImage(source, new System.Drawing.Rectangle(0, 0, target.Width, target.Height), croppedSource, GraphicsUnit.Pixel);
+                    BitmapSource frame = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(target.GetHbitmap(), IntPtr.Zero, System.Windows.Int32Rect.Empty, BitmapSizeOptions.FromWidthAndHeight(target.Width, target.Height));
+                    int index = row * 6 + col;
+                    this.assets.CharacterSource[index] = frame;
+                }
+            }
         }
 
         public void Reset()
@@ -50,11 +72,11 @@ namespace GravityGuy.Support.Game
 
             this.entityShapes = new GameEntityShapes()
             {
-                Player = new Rectangle()
+                Player = new System.Windows.Shapes.Rectangle()
                 {
                     Width = this.gameManager.Player.Position.Diagonal.X,
                     Height = this.gameManager.Player.Position.Diagonal.Y,
-                    Fill = Brushes.Green
+                    Fill = System.Windows.Media.Brushes.Green
                 },
 
                 PlayerTranslation = new TranslateTransform(0, 0),
@@ -72,7 +94,7 @@ namespace GravityGuy.Support.Game
 
             this.gameCanvas.Children.Add(this.entityShapes.Player);
 
-            this.entityShapes.Platforms = new List<Rectangle>();
+            this.entityShapes.Platforms = new List<System.Windows.Shapes.Rectangle>();
             this.entityShapes.CoinShapes = new Dictionary<Coin, Ellipse>();
 
             foreach (var coin in gameManager.Stage.Coins)
@@ -81,7 +103,7 @@ namespace GravityGuy.Support.Game
 
                 var shape = new Ellipse()
                 {
-                    Fill = Brushes.Gold,
+                    Fill = System.Windows.Media.Brushes.Gold,
                     Width = radius * 2,
                     Height = radius * 2,
                 };
@@ -102,7 +124,7 @@ namespace GravityGuy.Support.Game
 
             foreach (var platform in gameManager.Stage.Platforms)
             {
-                var rectangle = new Rectangle();
+                var rectangle = new System.Windows.Shapes.Rectangle();
                 var platformTransforms = new TransformGroup();
                 var dimension = platform.Position.Diagonal;
                 var corner = platform.Position.Corner;
@@ -172,6 +194,8 @@ namespace GravityGuy.Support.Game
                 this.entityShapes.PlayerTranslation.X = player.Position.Corner.X;
                 this.entityShapes.PlayerTranslation.Y = (mdlHeight - player.Position.Diagonal.Y) - (player.Position.Corner.Y);
             }
+
+            this.entityShapes.Player.Fill = new ImageBrush(this.assets.CharacterSource[(int)this.gameManager.Player.Animation.Frame % 30]);
         }
 
         private void CoinPropertyChange(object sender, PropertyChangedEventArgs args)
@@ -191,13 +215,13 @@ namespace GravityGuy.Support.Game
 
         private class GameEntityShapes
         {
-            public Rectangle Player;
+            public System.Windows.Shapes.Rectangle Player;
             public TranslateTransform PlayerTranslation;
 
             public TranslateTransform ViewportPan;
             public ScaleTransform ModelViewScale;
             
-            public List<Rectangle> Platforms;
+            public List<System.Windows.Shapes.Rectangle> Platforms;
             public Dictionary<Coin, Ellipse> CoinShapes;
         }
 
@@ -206,6 +230,7 @@ namespace GravityGuy.Support.Game
             public BitmapImage PlatformBottomSource;
             public BitmapImage PlatformTopSource;
             public BitmapImage PlatformInnerSource;
+            public BitmapSource[] CharacterSource;
         }
     }
 }
