@@ -173,6 +173,8 @@ namespace GravityGuy.Support.Game
 
                 await Task.Delay(16);
             }
+
+            this.Disptach(this.OnPresent);
         }
 
         #region Actor Support Code

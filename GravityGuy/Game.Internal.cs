@@ -22,11 +22,12 @@ namespace GravityGuy
 
             gameManager.OnCoinCaptured += (sender, args) => OnCoinCaptured();
             gameManager.OnPropertyChange += OnPropertyChanged;
+            gameManager.OnStart += (o, e) => OnStart();
         }
 
         public void UpdateCoinDisplay()
         {
-            window.CoinsCaptured.Text = coinDisplay.ToString();
+            window.CoinsCaptured.Text = coins.ToString();
         }
 
 		public void Victory()

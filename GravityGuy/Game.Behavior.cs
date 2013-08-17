@@ -10,11 +10,16 @@ namespace GravityGuy
 {
     internal partial class Game
     {
-        int coinDisplay;
+        int coins;
+
+        void OnStart()
+        {
+            // TODO: Reset game state at the start of the game
+        }
 
         void OnCoinCaptured()
         {
-            // TODO: Call the UpdateCoinDisplay function to update the number of coins captured
+            // TODO: Increment coinDisplay and call the UpdateCoinDisplay function to update the number of coins captured
             //UpdateCoinDisplay();
 
             // TODO: Create a way to detect that the player has won, and then call...

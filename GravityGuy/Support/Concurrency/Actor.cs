@@ -129,7 +129,7 @@ namespace GravityGuy.Support.Concurrency
         {
             if (null != handler)
             {
-                Task.Factory.StartNew(() => handler(this, args), CancellationToken.None);
+                Task.Factory.StartNew(() => handler(this, args), CancellationToken.None, TaskCreationOptions.None, this.uiThreadScheduler);
             }
         }
 
